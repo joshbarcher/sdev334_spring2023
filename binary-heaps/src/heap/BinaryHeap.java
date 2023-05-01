@@ -10,6 +10,7 @@ public class BinaryHeap<T extends Comparable<T>>
 	public BinaryHeap()
 	{
 		heap = (T[])new Comparable[20];
+
 	}
 
 	public void add(T element)
