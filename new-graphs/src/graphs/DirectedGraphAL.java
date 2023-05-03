@@ -76,6 +76,22 @@ public class DirectedGraphAL<V> implements IGraph<V>
     @Override
     public boolean containsEdge(V source, V destination)
     {
+        if (!containsVertex(source) || !containsVertex(destination))
+        {
+            return false;
+        }
+
+        Node head = adjLists.get(source);
+        Node current = head;
+        while (current != null)
+        {
+            if (current.vertex.equals(destination))
+            {
+                return true;
+            }
+            current = current.next;
+        }
+
         return false;
     }
 
