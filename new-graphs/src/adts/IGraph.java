@@ -2,6 +2,7 @@ package adts;
 
 import graphs.Edge;
 
+import java.util.List;
 import java.util.Set;
 
 //interface for a directed, weighted
@@ -21,6 +22,9 @@ public interface IGraph<V>
 
     Set<V> getVertices();
     Set<Edge<V>> getEdges();
+
+    List<V> dfs(V source);
+    List<V> bfs(V source);
 
     void printGraph();
 }

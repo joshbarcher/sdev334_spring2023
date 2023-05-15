@@ -3,14 +3,12 @@ package graphs;
 import adts.IGraph;
 import exceptions.DuplicateException;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 public class DirectedGraphAL<V> implements IGraph<V>
 {
     private HashMap<V, Node> adjLists = new HashMap<>();
+    private int edgeSize;
 
     @Override
     public void addVertex(V vertex)
@@ -47,6 +45,7 @@ public class DirectedGraphAL<V> implements IGraph<V>
             head = new Node(destination, head);
             adjLists.put(source, head);
         }
+        edgeSize++;
     }
 
     @Override
@@ -110,26 +109,83 @@ public class DirectedGraphAL<V> implements IGraph<V>
     @Override
     public int vertexSize()
     {
-        return 0;
+        return adjLists.size();
     }
 
     @Override
     public int edgeSize()
     {
-        return 0;
+        return edgeSize;
     }
 
     @Override
     public Set<V> getVertices()
     {
-        return null;
+        //create a new set (with all elements copied from the vertex set)
+        //to ensure encapsulation
+        return new HashSet(adjLists.keySet());
     }
 
     @Override
     public Set<Edge<V>> getEdges()
     {
+        Set<Edge<V>> edges = new HashSet<>();
+
+        //for each vertex
+        for (V vertex : adjLists.keySet())
+        {
+            Node current = adjLists.get(vertex);
+            while (current != null)
+            {
+                V other = current.vertex;
+                edges.add(new Edge<>(vertex, other));
+                current = current.next;
+            }
+        }
+        return edges;
+    }
+
+    @Override
+    public List<V> dfs(V source)
+    {
+        Set<V> seen = new HashSet<>();
+        List<V> traversal = new ArrayList<>();
+
+        //check whether the vertex exists or not
+        if (!containsVertex(source))
+        {
+            return traversal;
+        }
+
+        dfs(source, seen, traversal);
+
+        return traversal;
+    }
+
+    //recursive support method
+    private void dfs(V current, Set<V> seen, List<V> traversal)
+    {
+        if (!seen.contains(current))
+        {
+            seen.add(current);
+            traversal.add(current);
+
+            //traverse to adjacent vertices
+            Node head = adjLists.get(current);
+            while (head != null)
+            {
+                dfs(head.vertex, seen, traversal);
+                head = head.next;
+            }
+        }
+    }
+
+    @Override
+    public List<V> bfs(V source)
+    {
         return null;
     }
+
 
     private class Node
     {
